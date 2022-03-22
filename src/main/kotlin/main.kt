@@ -1,25 +1,26 @@
 fun main() {
-    println(calcDiscount(card = "Visa", transactionHistory = 1500000, transactionSum = 1500000))
-    println(calcDiscount(transactionHistory = 15000000, transactionSum = 15000000))
-    println(calcDiscount(card = "Mastercard", transactionHistory = 3500, transactionSum = 3500))
+    println("Комиссия ${calcDiscount(card = "Visa", transactionHistory = 150000, transactionSum = 150000)}")
+    println("Комиссия ${calcDiscount(transactionHistory = 15000000, transactionSum = 15000000)}")
+    println("Комиссия ${calcDiscount(card = "Mastercard", transactionHistory = 3500, transactionSum = 3500)}")
+    println("Комиссия ${calcDiscount(card = "Mastercard", transactionHistory = 7500000, transactionSum = 7500000)}")
+    println("Комиссия ${calcDiscount(card = "Mastercard", transactionHistory = 7500, transactionSum = 7500)}")
 }
 
-fun calcDiscount(card: String = "Vk Pay", transactionHistory: Int = 0, transactionSum: Int): String {
+fun calcDiscount(card: String = "Vk Pay", transactionHistory: Int = 0, transactionSum: Int): Int? {
     if (inLimits(card, transactionHistory, transactionSum)) {
         return when (card) {
-            "Mastercard", "Maestro" -> if ((transactionHistory < 7500000) && (transactionSum < 7500000)) {
-                return "Комиссия 0 копеек"
+            "Mastercard", "Maestro" -> return if ((transactionHistory < 7500000) && (transactionSum < 7500000)) {
+                0
             } else {
-                return "Комиссия ${((transactionSum * 0.006 + 2000) / 100).toInt()} копеек"
+                ((transactionSum * 0.006 + 2000) / 100).toInt()
             }
-            "Visa", "Мир" -> return when {
-                transactionSum * 0.0075 > 3500 -> "Комиссия ${transactionSum * 0.0075.toInt()} копеек"
-                else -> "Комиссия 3500 копеек"
-            }
-            else -> "Комиссия 0 копеек"
+            "Visa", "Мир" -> when {
+                transactionSum * 0.0075 > 3500 -> transactionSum * 0.0075.toInt()
+                else -> 3500
+            } else -> 0
         }
     } else {
-        return "Превышен лимит"
+        return null
     }
 }
 
